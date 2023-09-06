@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id         String   @unique
+  password   String
+  files      files[]
+  created_at DateTime @default(dbgenerated("NOW()"))
+}
+
+model files {
+  id             String   @unique @default(cuid())
+  original_name  String
+  file_extension String
+  mime_type      String
+  size           Int
+  userId         String
+  url            String   @unique
+  user           users    @relation(fields: [userId], references: [id])
+  created_at     DateTime @default(dbgenerated("NOW()"))
+}
